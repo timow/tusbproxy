@@ -2,6 +2,11 @@
 
 from scapy.all import *
 
+class XLEShortField(LEShortField):
+    def i2repr(self, pkt, x):
+        return lhex(self.i2h(pkt, x))
+scapy.fields.XLEShortField = XLEShortField
+
 # Table 9-4. Standard Request Codes
 REQUEST_CODE = {
         'GET_STATUS'        : 0,
