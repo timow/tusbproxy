@@ -28,8 +28,26 @@ serial protocol. As such, the client can implement a USB device in software
 Requirements
 ------------
 
-tusbproxy runs on a [Teensy++ 2.0 board](http://www.pjrc.com/teensy/) and
-requires the [UART serial port](http://www.pjrc.com/teensy/td_uart.html).
+* Hardware:
+  tusbproxy runs on a [Teensy++ 2.0 board](http://www.pjrc.com/teensy/) and
+  requires the [UART serial port](http://www.pjrc.com/teensy/td_uart.html).
+
+* Software:
+  Compiling the Teensy proxy requires gcc-avr and make
+
+
+Installation
+------------
+
+### Teensy Proxy
+
+1. Compile the proxy:
+
+    cd src/teensy/
+    make
+
+2. Deploy the resulting binary "tusbproxy.hex" using the
+   [Teensy Loader](http://www.pjrc.com/teensy/loader.html).
 
 
 Documentation
