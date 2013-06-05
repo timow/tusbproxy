@@ -41,10 +41,7 @@ Installation
 
 ### Teensy Proxy
 
-1. Compile the proxy:
-
-       cd src/teensy/
-       make
+1. Compile the proxy: cd src/teensy/ && make
 
 
 2. Deploy the resulting binary "tusbproxy.hex" using the
