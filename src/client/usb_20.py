@@ -71,3 +71,38 @@ class Setup(Packet):
             LEShortField('index', 0),
             LEShortField('length', 0),
             ]
+
+class Descriptor(Packet):
+    name = 'USB Standard Descriptor'
+
+    fields_desc = [
+            ByteField('length', None),
+            ByteEnumField('descriptor_type', DESCRIPTOR_TYPE['DEVICE'], DESCRIPTOR_TYPE),
+            ]
+
+    def post_build(self, pkt, pay):
+        if self.length is None and pay:
+            l = (len(pkt) + len(pay)) & 0xFF
+            pkt = chr(l) + pkt[1:]
+        return pkt + pay
+
+
+# Table 9-8. Standard Device Descriptor 
+class DeviceDescriptor(Packet):
+    name = 'USB Standard Device Descriptor'
+
+    fields_desc = [
+            XLEShortField('usb', 0x0200),
+            XByteField('device_class', 0),
+            XByteField('device_subclass', 0),
+            XByteField('device_protocol', 0),
+            ByteField('max_packet_size_0', 64),
+            XLEShortField('id_vendor', 0),
+            XLEShortField('id_product', 0),
+            XLEShortField('device', 0),
+            ByteField('manufacturer', 0),
+            ByteField('product', 0),
+            ByteField('serial_number', 0),
+            ByteField('num_configurations', 0),
+    ]
+bind_layers(Descriptor, DeviceDescriptor, descriptor_type = DESCRIPTOR_TYPE['DEVICE'])
