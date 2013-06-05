@@ -21,8 +21,8 @@ via a serial interface.
     +------------+         +----------+          +----------+
 
 The client can control the USB stack of the Teensy board via a dedicated
-serial protocol. As such the client can implement a USB device in software
-(e.g., relying in scapy).
+serial protocol. As such, the client can implement a USB device in software
+(e.g., relying on scapy).
 
 
 Requirements
