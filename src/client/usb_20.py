@@ -16,3 +16,15 @@ REQUEST_CODE = {
         'SET_INTERFACE'     : 11,
         'SYNCH_FRAME'       : 12,
         }
+
+# Table 9-5. Descriptor Types
+DESCRIPTOR_TYPE = {
+        'DEVICE'                            : 1,
+        'CONFIGURATION'                     : 2,
+        'STRING'                            : 3,
+        'INTERFACE'                         : 4,
+        'ENDPOINT'                          : 5,
+        'DEVICE_QUALIFIER'                  : 6,
+        'OTHER_SPEED_CONFIGURATION'         : 7,
+        'INTERFACE_POWER'                   : 8
+        }
