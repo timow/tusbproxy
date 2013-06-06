@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from scapy.all import *
+from langid import LANGID
 
 class XLEShortField(LEShortField):
     def i2repr(self, pkt, x):
@@ -106,3 +107,28 @@ class DeviceDescriptor(Packet):
             ByteField('num_configurations', 0),
     ]
 bind_layers(Descriptor, DeviceDescriptor, descriptor_type = DESCRIPTOR_TYPE['DEVICE'])
+
+# Table 9-15. String Descriptor Zero
+class StringDescriptorZero(Packet):
+    name = 'USB String Descriptor Zero'
+
+    fields_desc = [
+            FieldListField('LANGIDs',
+                [LANGID['English (United States)']],
+                LEShortEnumField('LANGID', LANGID['English (United States)'],
+                    LANGID),
+                count_from = lambda pkt: pkt[StringDescriptorZero].get_lang_id_count()),
+            ]
+    
+    def get_lang_id_count(self):
+        descriptor = self.underlayer
+        
+        if descriptor:
+            # omit 2 bytes for descriptor header
+            # consider 2 bytes per lang id
+            n_lang_ids = (descriptor.length - 2) / 2
+        else:
+            n_lang_ids = len(self.LANGIDs) / 2
+
+        return nr_lang_ids
+bind_layers(Descriptor, StringDescriptorZero, descriptor_type = DESCRIPTOR_TYPE['STRING'])
