@@ -67,7 +67,15 @@ class Setup(Packet):
                 RCPT_ENDPOINT  : 'Endpoint',
                 RCPT_OTHER     : 'Other'}),
             ByteEnumField('request', 0, REQUEST_CODE),
-            LEShortField('value', 0),
+            ConditionalField(
+                LEShortField('value', 0),
+                lambda x: x.request != REQUEST_CODE['GET_DESCRIPTOR']),
+            ConditionalField(
+                ByteField('descriptor_index', 0),
+                lambda x: x.request == REQUEST_CODE['GET_DESCRIPTOR']),
+            ConditionalField(
+                ByteEnumField('descriptor_type', DESCRIPTOR_TYPE['DEVICE'], DESCRIPTOR_TYPE),
+                lambda x: x.request == REQUEST_CODE['GET_DESCRIPTOR']),
             LEShortField('index', 0),
             LEShortField('length', 0),
             ]
