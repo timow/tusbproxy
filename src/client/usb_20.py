@@ -52,7 +52,6 @@ class Setup(Packet):
     RCPT_ENDPOINT    = 2
     RCPT_OTHER       = 3
 
-
     fields_desc = [
             BitEnumField('data_xfer_direction', 0, 1, {
                 DIR_HOST_TO_DEVICE : 'Host-to-device',
@@ -105,7 +104,7 @@ class DeviceDescriptor(Packet):
             ByteField('product', 0),
             ByteField('serial_number', 0),
             ByteField('num_configurations', 0),
-    ]
+            ]
 bind_layers(Descriptor, DeviceDescriptor, descriptor_type = DESCRIPTOR_TYPE['DEVICE'])
 
 # Table 9-15. String Descriptor Zero
