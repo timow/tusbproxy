@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from scapy.all import *
+from class_code import CLASS_CODE
 from langid import LANGID
 
 class XLEShortField(LEShortField):
@@ -114,6 +115,40 @@ class DeviceDescriptor(Packet):
             ByteField('num_configurations', 0),
             ]
 bind_layers(Descriptor, DeviceDescriptor, descriptor_type = DESCRIPTOR_TYPE['DEVICE'])
+
+# Table 9-10. Standard Configuration Descriptor 
+class ConfigurationDescriptor(Packet):
+    name = 'USB Standard Configuration Descriptor'
+
+    fields_desc = [
+            LEShortField('total_length', None),
+            ByteField('num_interfaces', None),
+            ByteField('configuration_value', 1),
+            ByteField('configuration', 0),
+            BitField('reserved_1', 1, 1),
+            BitEnumField('self_powered', 1, 1, {'True': 1, 'False': 0}),
+            BitEnumField('remote_wakeup', 1, 1, {'True': 1, 'False': 0}),
+            BitField('reserved_0', 0, 5),
+            ByteField('bMaxPower', 50),
+            PacketListField('descriptors', None, Descriptor, length_from = lambda p: p.total_length - len(ConfigurationDescriptor()))
+            ]
+    # TODO: fix total_length and num_interfaces in post_build
+bind_layers(Descriptor, ConfigurationDescriptor, descriptor_type = DESCRIPTOR_TYPE['CONFIGURATION'])
+
+# Table 9-12. Standard Interface Descriptor 
+class InterfaceDescriptor(Packet):
+    name = 'USB Standard Interface Descriptor'
+
+    fields_desc = [
+            ByteField('interface_number', 0),
+            ByteField('alternate_setting', 0),
+            ByteField('num_endpoints', 0),
+            ByteEnumField('interface_class', CLASS_CODE['Device'], CLASS_CODE),
+            ByteField('interface_subclass', 0),
+            ByteField('interface_protocol', 0),
+            ByteField('interface', 0),
+            ]
+bind_layers(Descriptor, InterfaceDescriptor, descriptor_type = DESCRIPTOR_TYPE['INTERFACE'])
 
 # Table 9-15. String Descriptor Zero
 class StringDescriptorZero(Packet):
