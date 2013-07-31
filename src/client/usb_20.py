@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from scapy.all import *
+
 from class_code import CLASS_CODE
 from langid import LANGID
 
