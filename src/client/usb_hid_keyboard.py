@@ -3,18 +3,36 @@
 import serial, sys
 
 from usb_20 import *
+from class_code import CLASS_CODE
+from hid_11 import *
 from langid import LANGID
 from teensy_usb_proxy import *
 
 DESCRIPTORS = {
         DESCRIPTOR_TYPE['CONFIGURATION'] : {
             0 : {
-                0 : Descriptor(descriptor_type = DESCRIPTOR_TYPE['CONFIGURATION']) / \
+                0 : Descriptor(length = 9, descriptor_type = DESCRIPTOR_TYPE['CONFIGURATION']) / \
                         ConfigurationDescriptor(
-                            total_length = 0,
                             num_interfaces = 1,
                             configuration_value = 1,
-                            configuration = 0),
+                            configuration = 0) / \
+                        Descriptor(descriptor_type = DESCRIPTOR_TYPE['INTERFACE']) / \
+                            InterfaceDescriptor(
+                                num_endpoints = 1,
+                                interface_class = CLASS_CODE['HID'],
+                                interface_subclass = SUBCLASS_CODE['Boot'],
+                                interface_protocol = PROTOCOL_CODE['Keyboard'],
+                                ) / \
+                        Descriptor(descriptor_type = DESCRIPTOR_TYPE['HID']) / \
+                            HIDDescriptor(
+                                num_descriptors = 1,
+                                descriptors = [
+                                    DescriptorTypeLength(
+                                        descriptor_type = DESCRIPTOR_TYPE['Report'],
+                                        descriptor_length = 0,
+                                        )
+                                    ]
+                                ),
                 },
             },
         DESCRIPTOR_TYPE['DEVICE'] : {
