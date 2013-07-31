@@ -2,19 +2,42 @@
 
 from scapy.all import *
 
+from usb_20 import *
+
 # USB Device Class Definition for HID, Version 1.11
 
+# Section 7.1. Standard Requests
+DESCRIPTOR_TYPE.update({
+        'HID'                 : 0x21,
+        'Report'              : 0x22,
+        'Physical Descriptor' : 0x23,
+        })
+
+# Section 4.2. Subclass Codes
+SUBCLASS_CODE = {
+        'No Subclass' : 0x00,
+        'Boot'        : 0x01,
+        }
+
+# Section 4.3. Protocol Codes
+PROTOCOL_CODE = {
+        'None'     : 0x00,
+        'Keyboard' : 0x01,
+        'Mouse'    : 0x02,
+        }
+
+# Section 6.2.1. Country Code
 COUNTRY_CODE = {
-        'Not Supported'       : 00,
-        'Arabic'              : 01,
-        'Belgian'             : 02,
-        'Canadian-Bilingual'  : 03,
-        'Canadian-French'     : 04,
-        'Czech Republic'      : 05,
-        'Danish'              : 06,
-        'Finnish'             : 07,
-        'French'              : 08,
-        'German'              : 09,
+        'Not Supported'       : 0,
+        'Arabic'              : 1,
+        'Belgian'             : 2,
+        'Canadian-Bilingual'  : 3,
+        'Canadian-French'     : 4,
+        'Czech Republic'      : 5,
+        'Danish'              : 6,
+        'Finnish'             : 7,
+        'French'              : 8,
+        'German'              : 9,
         'Greek'               : 10,
         'Hebrew'              : 11,
         'Hungary'             : 12,
@@ -43,25 +66,23 @@ COUNTRY_CODE = {
         'Turkish-F'           : 35,
         }
 
+# Section 6.2.1 HID Descriptor
 class DescriptorTypeLength(Packet):
     name = 'USB HID Descriptor Type / Length'
 
     fields_desc = [
-            ByteField('descriptor_type', 0),
+            ByteEnumField('descriptor_type', DESCRIPTOR_TYPE['DEVICE'], DESCRIPTOR_TYPE),
             LEShortField('descriptor_length', 0)
             ]
-
-
-# Section 6.2.1 HID Descriptor
 class HIDDescriptor(Packet):
     name = 'USB HID Descriptor'
     
     fields_desc = [
-            XLEShortField('hid', 0x010b),
-            ByteEnumField('country_code', COUNTRY_CODE['US'], COUNTRY_CODE),
-            ByteField('num_descriptors', 1), # TODO:counter for descriptor type / length
-            ByteField('descriptor_type', 0),
-            LEShortField('descriptor_length', 0), # TODO: descriptor_packets
-            PacketListField('descriptors', None, DescriptorTypeLength,
+            XLEShortField('hid', 0x0111),
+            ByteEnumField('country_code', COUNTRY_CODE['Not Supported'], COUNTRY_CODE),
+            ByteField('num_descriptors', None), # TODO:counter for descriptor type / length
+            PacketListField('descriptors', [], DescriptorTypeLength,
                 count_from = lambda p: p.num_descriptors)
             ]
+bind_layers(Descriptor, HIDDescriptor, descriptor_type = DESCRIPTOR_TYPE['HID'])
+
