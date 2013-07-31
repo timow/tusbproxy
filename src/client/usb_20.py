@@ -135,7 +135,13 @@ class ConfigurationDescriptor(Packet):
             ByteField('bMaxPower', 50),
             PacketListField('descriptors', None, Descriptor, length_from = lambda p: p.total_length - len(ConfigurationDescriptor()))
             ]
-    # TODO: fix total_length and num_interfaces in post_build
+
+    # TODO: fix num_interfaces in post_build
+    def post_build(self, pkt, pay):
+        if self.total_length is None and pay:
+            l = (2 + len(pkt) + len(pay)) & 0xFFFF
+            pkt = struct.pack('<H', l) + pkt[2:]
+        return pkt + pay
 bind_layers(Descriptor, ConfigurationDescriptor, descriptor_type = DESCRIPTOR_TYPE['CONFIGURATION'])
 
 # Table 9-12. Standard Interface Descriptor 
