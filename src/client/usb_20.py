@@ -92,7 +92,9 @@ class Descriptor(Packet):
 
     def post_build(self, pkt, pay):
         if self.length is None and pay:
-            l = (len(pkt) + len(pay)) & 0xFF
+            # length field only covers the immediate descriptor, but not further payloads
+            # (e.g., the basic config descriptor, but not further succeeding descriptors)
+            l = (len(pkt) + len(self.payload) - len(self.payload.payload)) & 0xFF
             pkt = chr(l) + pkt[1:]
         return pkt + pay
 
