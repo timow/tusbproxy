@@ -158,6 +158,7 @@ class InterfaceDescriptor(Packet):
             ByteField('interface', 0),
             ]
 bind_layers(Descriptor, InterfaceDescriptor, descriptor_type = DESCRIPTOR_TYPE['INTERFACE'])
+bind_layers(InterfaceDescriptor, Descriptor)
 
 # Table 9-15. String Descriptor Zero
 class StringDescriptorZero(Packet):
