@@ -184,3 +184,15 @@ class StringDescriptorZero(Packet):
 
         return nr_lang_ids
 bind_layers(Descriptor, StringDescriptorZero, descriptor_type = DESCRIPTOR_TYPE['STRING'])
+
+# Table 9-16. UNICODE String Descriptor
+class StringDescriptor(Packet):
+    name = 'USB String Descriptor'
+    
+    fields_desc = [
+            # TODO: reflect the UTF16 encoding
+            StrLenField('string', '',
+                length_from = lambda pkt: pkt.underlayer.length - 2
+                    if pkt.underlayer else len(pkt)),
+            ]
+bind_layers(Descriptor, StringDescriptor, descriptor_type = DESCRIPTOR_TYPE['STRING'])
