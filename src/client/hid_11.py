@@ -74,6 +74,10 @@ class DescriptorTypeLength(Packet):
             ByteEnumField('descriptor_type', DESCRIPTOR_TYPE['DEVICE'], DESCRIPTOR_TYPE),
             LEShortField('descriptor_length', 0)
             ]
+
+    def extract_padding(self, s):
+        return (None, s)
+
 class HIDDescriptor(Packet):
     name = 'USB HID Descriptor'
     
