@@ -30,8 +30,16 @@ DESCRIPTORS = {
                                     DescriptorTypeLength(
                                         descriptor_type = DESCRIPTOR_TYPE['Report'],
                                         descriptor_length = 0,
-                                        )
+                                        ),
                                     ]
+                                ) / \
+                        Descriptor(descriptor_type = DESCRIPTOR_TYPE['ENDPOINT']) / \
+                            EndpointDescriptor(
+                                endpoint_direction = EndpointDescriptor.IN,
+                                endpoint_number = 3,
+                                transfer_type = EndpointDescriptor.INTERRUPT,
+                                max_packet_size = 8,
+                                interval = 1,
                                 ),
                 },
             },
