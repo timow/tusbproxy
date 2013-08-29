@@ -160,6 +160,65 @@ class InterfaceDescriptor(Packet):
 bind_layers(Descriptor, InterfaceDescriptor, descriptor_type = DESCRIPTOR_TYPE['INTERFACE'])
 bind_layers(InterfaceDescriptor, Descriptor)
 
+# Table 9-13. Standard Endpoint Descriptor 
+class EndpointDescriptor(Packet):
+    name = 'USB Standard Endpoint Descriptor'
+
+    # endpoint direction
+    OUT = 0
+    IN  = 1
+
+    # usage type
+    DATA              = 0
+    FEEDBACK          = 1
+    IMPLICIT_FEEDBACK = 2
+    RESERVED          = 3
+
+    # synchronization type
+    NO_SYNC  = 0
+    ASYNC    = 1
+    ADAPTIVE = 2
+    SYNC     = 3
+
+    # transfer type
+    CONTROL     = 0
+    ISOCHRONOUS = 1
+    BULK        = 2
+    INTERRUPT   = 3
+
+    fields_desc = [
+            BitEnumField('endpoint_direction', 0, 1, {OUT : 'OUT', IN : 'IN'}),
+            BitField('reserved_0', 0, 3),
+            BitField('endpoint_number', 0, 4),
+            BitField('reserved_1', 0, 2),
+
+            # TODO: undefined for isochronous endpoints...
+            BitEnumField('usage_type', 0, 2, {
+                DATA              : 'Data',
+                FEEDBACK          : 'Feedback',
+                IMPLICIT_FEEDBACK : 'Implicit Feedback Data',
+                RESERVED          : 'Reserved'}),
+
+            # TODO: undefined for isochronous endpoints...
+            BitEnumField('sync_type', 0, 2, {
+                NO_SYNC  : 'No Synchronization',
+                ASYNC    : 'Asynchronous',
+                ADAPTIVE : 'Adaptive',
+                SYNC     : 'Synchronous'}),
+
+            BitEnumField('transfer_type', 0, 2, {
+                CONTROL     : 'Control',
+                ISOCHRONOUS : 'Isochronous',
+                BULK        : 'Bulk',
+                INTERRUPT   : 'Interrupt'}),
+
+            # TODO: more complex for isochronous endpoints...
+            LEShortField('max_packet_size', 0),
+
+            ByteField('interval', 0),
+            ]
+bind_layers(Descriptor, EndpointDescriptor, descriptor_type = DESCRIPTOR_TYPE['ENDPOINT'])
+
 # Table 9-15. String Descriptor Zero
 class StringDescriptorZero(Packet):
     name = 'USB String Descriptor Zero'
