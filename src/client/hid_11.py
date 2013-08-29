@@ -89,4 +89,5 @@ class HIDDescriptor(Packet):
                 count_from = lambda p: p.num_descriptors)
             ]
 bind_layers(Descriptor, HIDDescriptor, descriptor_type = DESCRIPTOR_TYPE['HID'])
+bind_layers(HIDDescriptor, Descriptor)
 
