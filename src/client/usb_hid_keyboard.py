@@ -151,7 +151,18 @@ if __name__ == "__main__":
             print '[*] setup packet:'
             stp.show2()
 
-            if stp.request == REQUEST_CODE['GET_DESCRIPTOR']:
+            if stp.request == REQUEST_CODE['GET_CONFIGURATION']:
+                print "[*] received GET_CONFIGURATION request"
+                # wait for IN packet
+                u.waitForInterrupt('UEINTX', 1 << TXINI)
+
+                # send active configuration
+                u.write('UEDATX', chr(u.configuration))
+
+                # inform host about IN packet
+                u.write('UEINTX', chr(~(1<<TXINI) & 0xff))
+
+            elif stp.request == REQUEST_CODE['GET_DESCRIPTOR']:
                 print "[*] received GET_DESCRIPTOR request"
                 # wait for IN packet
                 u.waitForInterrupt('UEINTX', 1 << TXINI)
