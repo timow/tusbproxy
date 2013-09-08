@@ -279,6 +279,6 @@ class HIDDescriptor(Packet):
             PacketListField('descriptors', [], DescriptorTypeLength,
                 count_from = lambda p: p.num_descriptors)
             ]
+    def extract_padding(self, s):
+        return None, s
 bind_layers(Descriptor, HIDDescriptor, descriptor_type = DESCRIPTOR_TYPE['HID'])
-bind_layers(HIDDescriptor, Descriptor)
-
