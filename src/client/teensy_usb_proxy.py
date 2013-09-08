@@ -104,6 +104,7 @@ EP_SIZE = {
         256 : 0b01010000,
         }
 
+# TODO: separate proxy-specific parts from USB device-specific parts
 class TeensyUSBProxy:
     def __init__(self, ser):
         self.ser = ser
