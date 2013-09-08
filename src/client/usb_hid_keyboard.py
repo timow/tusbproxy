@@ -176,7 +176,7 @@ if __name__ == "__main__":
                     # wait for IN packet
                     u.waitForInterrupt('UEINTX', 1 << TXINI)
 
-                    # send desriptor
+                    # send descriptor
                     u.write('UEDATX', str(desc))
 
                     # inform host about IN packet
