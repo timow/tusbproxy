@@ -108,6 +108,7 @@ EP_SIZE = {
 class TeensyUSBProxy:
     def __init__(self, ser):
         self.ser = ser
+        self.configuration = None
 
     def read(self, reg, n = 1):
         t,o = REG[reg]
