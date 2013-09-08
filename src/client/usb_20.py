@@ -10,6 +10,37 @@ class XLEShortField(LEShortField):
         return lhex(self.i2h(pkt, x))
 scapy.fields.XLEShortField = XLEShortField
 
+class StrLenEnumField(StrLenField, StrFixedLenEnumField):
+    def __init__(self, name, default, fld=None, enum=None, length_from=None):
+        StrLenField.__init__(self, name, default, fld, length_from)
+        self.enum = enum
+scapy.fields.StrLenEnumField = StrLenEnumField
+
+class BitLenField(BitField, LenField):
+    def __init__(self, name, default, size):
+        BitField.__init__(self, name, default, size)
+
+    def i2m(self, pkt, x):
+        if x is None:
+            x = len(pkt.payload)
+        return x
+scapy.fields.BitLenField = BitLenField
+
+class MyBitMultiEnumField(BitField,MultiEnumField):
+    def __init__(self, name, default, size, enum, depends_on):
+        MultiEnumField.__init__(self, name, default, enum, depends_on)
+        self.rev = size < 0
+        self.size = abs(size)
+    def any2i(self, pkt, x):
+        return MultiEnumField.any2i(self, pkt, x)
+    def i2repr(self, pkt, x):
+        return MultiEnumField.i2repr(self, pkt, x)
+    def i2repr_one(self, pkt, x):
+        v = self.depends_on(pkt)
+        if v in self.s2i_multi:
+            return self.s2i_multi[v].get(x,x)
+        return x
+
 # Table 9-4. Standard Request Codes
 REQUEST_CODE = {
         'GET_STATUS'        : 0,
