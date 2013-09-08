@@ -8,6 +8,54 @@ from hid_11 import *
 from langid import LANGID
 from teensy_usb_proxy import *
 
+
+# USB Device Class Definition for HID, Version 1.11
+# Section B.1, Protocol 1 (Keyboard)
+KEYBOARD_REPORT_DESCRIPTOR = ReportDescriptor(
+          "\x05\x01"
+        + "\x09\x06"
+        + "\xA1\x01"
+        + "\x75\x01"
+        + "\x95\x08"
+        + "\x05\x07"
+        + "\x19\xE0"
+        + "\x29\xE7"
+        + "\x15\x00"
+        + "\x25\x01"
+        + "\x81\x02"
+        + "\x95\x01"
+        + "\x75\x08"
+        + "\x81\x03"
+        + "\x95\x05"
+        + "\x75\x01"
+        + "\x05\x08"
+        + "\x19\x01"
+        + "\x29\x05"
+        + "\x91\x02"
+        + "\x95\x01"
+        + "\x75\x03"
+        + "\x91\x03"
+        + "\x95\x06"
+        + "\x75\x08"
+        + "\x15\x00"
+        + "\x25\x68"
+        + "\x05\x07"
+        + "\x19\x00"
+        + "\x29\x68"
+        + "\x81\x00"
+        + "\xc0"
+        )
+
+KEYBOARD_HID_DESCRIPTOR = Descriptor(
+        descriptor_type = DESCRIPTOR_TYPE['HID']) / \
+                HIDDescriptor(
+                        num_descriptors = 1,
+                        descriptors = [
+                            DescriptorTypeLength(
+                                descriptor_type = DESCRIPTOR_TYPE['Report'],
+                                descriptor_length = len(KEYBOARD_REPORT_DESCRIPTOR),
+                                ),])
+
 DESCRIPTORS = {
         DESCRIPTOR_TYPE['CONFIGURATION'] : {
             0 : {
@@ -23,16 +71,7 @@ DESCRIPTORS = {
                                 interface_subclass = SUBCLASS_CODE['Boot'],
                                 interface_protocol = PROTOCOL_CODE['Keyboard'],
                                 ) / \
-                        Descriptor(descriptor_type = DESCRIPTOR_TYPE['HID']) / \
-                            HIDDescriptor(
-                                num_descriptors = 1,
-                                descriptors = [
-                                    DescriptorTypeLength(
-                                        descriptor_type = DESCRIPTOR_TYPE['Report'],
-                                        descriptor_length = 0,
-                                        ),
-                                    ]
-                                ) / \
+                        KEYBOARD_HID_DESCRIPTOR / \
                         Descriptor(descriptor_type = DESCRIPTOR_TYPE['ENDPOINT']) / \
                             EndpointDescriptor(
                                 endpoint_direction = EndpointDescriptor.IN,
@@ -54,6 +93,16 @@ DESCRIPTORS = {
                             manufacturer = 1,
                             product = 2,
                             num_configurations = 1),
+                },
+            },
+        DESCRIPTOR_TYPE['HID'] : {
+            0 : {
+                0 : KEYBOARD_HID_DESCRIPTOR,
+                },
+            },
+        DESCRIPTOR_TYPE['Report'] : {
+            0 : {
+                0 : KEYBOARD_REPORT_DESCRIPTOR,
                 },
             },
         DESCRIPTOR_TYPE['STRING'] : {
