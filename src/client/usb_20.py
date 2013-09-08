@@ -148,6 +148,9 @@ class DeviceDescriptor(Packet):
             ByteField('serial_number', 0),
             ByteField('num_configurations', 0),
             ]
+
+    def extract_padding(s):
+        return None, s
 bind_layers(Descriptor, DeviceDescriptor, descriptor_type = DESCRIPTOR_TYPE['DEVICE'])
 
 # Table 9-10. Standard Configuration Descriptor 
@@ -188,8 +191,9 @@ class InterfaceDescriptor(Packet):
             ByteField('interface_protocol', 0),
             ByteField('interface', 0),
             ]
+    def extract_padding(self, s):
+        return None, s
 bind_layers(Descriptor, InterfaceDescriptor, descriptor_type = DESCRIPTOR_TYPE['INTERFACE'])
-bind_layers(InterfaceDescriptor, Descriptor)
 
 # Table 9-13. Standard Endpoint Descriptor 
 class EndpointDescriptor(Packet):
