@@ -4,6 +4,17 @@ from scapy.all import *
 
 from usb_20 import *
 
+class ItemEnumField(StrFixedLenField):
+    def __init__(self, name, default, length=None, enum=None, length_from=None):
+        StrFixedLenField.__init__(self, name, default, length=length, length_from=length_from)
+        self.enum = enum
+    def i2repr(self, pkt, v):
+        r = v.lstrip("\0")
+        if v in self.enum:
+            return "%s (%s)" % (repr(v), self.enum[v])
+        elif r in self.enum:
+            return "%s (%s)" % (repr(v), self.enum[r])
+
 # USB Device Class Definition for HID, Version 1.11
 
 # Section 7.1. Standard Requests
