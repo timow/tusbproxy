@@ -210,7 +210,6 @@ if __name__ == "__main__":
                     u.write('UECONX', '\x00')
 
                 u.write('UERST', '\x1e\x00')
-            }
 
             elif stp.request == REQUEST_CODE['GET_STATUS']:
                 print "[*] received GET_STATUS request"
