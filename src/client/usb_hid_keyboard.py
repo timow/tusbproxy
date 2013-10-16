@@ -190,3 +190,35 @@ if __name__ == "__main__":
                 u.write('UEINTX', chr(~(1<<TXINI) & 0xff))
                 u.waitForInterrupt('UEINTX', 1 << TXINI)
                 u.write('UDADDR', stp.value | (1 << ADDEN))
+
+            elif stp.request == REQUEST_CODE['SET_CONFIGURATION']:
+                print "[*] received SET_CONFIGURATION request"
+                config = stp.value
+                u.write('UEINTX', chr(~(1<<TXINI) & 0xff))
+
+                # configure EP 3
+                u.write('UENUM', '\x03')
+                # enable endpoint
+                u.write('UECONX',  (1 << EPEN))
+                # interrupt IN endpoint
+                u.write('UECFG0X', (1 << EPTYPE1) | (1 << EPTYPE0) | (1 << EPDIR))
+                u.write('UECFG1X', (1 << EPBK0))
+
+                # disable EP 1,2, and 4
+                for ep in [1, 2, 4]:
+                    u.write('UENUM', chr(ep))
+                    u.write('UECONX', '\x00')
+
+                u.write('UERST', '\x1e\x00')
+            }
+
+            elif stp.request == REQUEST_CODE['GET_STATUS']:
+                print "[*] received GET_STATUS request"
+                # we don't support endpoint halting
+                u.write('UEDATX', '\x00\x00')
+                u.write('UEINTX', chr(~(1<<TXINI) & 0xff))
+
+
+
+
+
