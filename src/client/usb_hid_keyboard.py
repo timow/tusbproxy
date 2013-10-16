@@ -211,6 +211,12 @@ if __name__ == "__main__":
 
                 u.write('UERST', '\x1e\x00')
 
+            elif stp.request == REQUEST_CODE['GET_CONFIGURATION']:
+                print "[*] received GET_CONFIGURATION request"
+                u.waitForInterrupt('UEINTX', 1 << TXINI)
+                u.write('UEDATX', config)
+                u.write('UEINTX', chr(~(1<<TXINI) & 0xff))
+
             elif stp.request == REQUEST_CODE['GET_STATUS']:
                 print "[*] received GET_STATUS request"
                 # we don't support endpoint halting
