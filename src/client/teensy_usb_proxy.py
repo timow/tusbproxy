@@ -20,6 +20,7 @@ REG = {
         'UEDATX'  : (TYPE_MEM8, chr(0xf1)),
         'UEINTX'  : (TYPE_MEM8, chr(0xe8)),
         'UENUM'   : (TYPE_MEM8, chr(0xe9)),
+        'UERST'   : (TYPE_MEM8, chr(0xea)),
         'UHWCON'  : (TYPE_MEM8, chr(0xd7)),
         'USBCON'  : (TYPE_MEM8, chr(0xd8)),
         }
